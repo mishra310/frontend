@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 const EventHandling = () => {
 
 	const [upvotes, setUpvotes] = useState(0)
-	const [mycolour, setMycolour] = useState('red')
+	const [mycolour, setMycolour] = useState('skyblue')
 
 	let likes = 0;
 

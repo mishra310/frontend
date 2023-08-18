@@ -1,8 +1,12 @@
 import { useFormik } from 'formik'
 import React from 'react'
+import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 import * as Yup from 'yup'
 
 const Signup = () => {
+
+  const navigate = useNavigate();
 
   const SignupSchema = Yup.object().shape({
     name: Yup.string()
@@ -21,7 +25,41 @@ const Signup = () => {
       cPassword: ''
     },
     // onSubmit : (values) => { alert( values);}
-    onSubmit: (values) => { console.log(values); },
+    onSubmit: async (values) => {
+      console.log(values);
+
+     const res = await fetch('http://localhost:5000/user/add',{
+      method: 'POST',
+      body: JSON.stringify(values),
+      headers: {
+        'Content-Type' : 'application/json'
+        
+      }
+     });
+
+     console.log(res.status);
+     console.log(await res.json);
+
+      console.log('Form Submitted');
+
+      if(res.status === 200){
+        Swal.fire({
+          icon : 'success',
+          title : 'Nice',
+          text : 'User Registerer Successfully'
+        }); 
+
+        // navigate to login page
+        navigate('/login');
+        
+      }else{
+        Swal.fire({
+          icon : 'error',
+          title : 'Oops',
+          text : 'Something went Wrong!'
+        });
+      }
+    },
     validationSchema: SignupSchema
 
   });
@@ -46,12 +84,12 @@ const Signup = () => {
                             <input
                               type="text"
                               id="name"
-                              className={"form-control " +(signupForm.errors.name ? "border-danger" : '')}
+                              className={"form-control " + (signupForm.errors.name ? "border-danger" : '')}
                               value={signupForm.values.name}
                               onChange={signupForm.handleChange}
                               placeholder='Your Name'
                             />
-                            <span style={{color:'red',fontSize:'10'}}>{signupForm.errors.name}</span>
+                            <span style={{ color: 'red', fontSize: '10' }}>{signupForm.errors.name}</span>
                           </div>
                         </div>
                         <div className="d-flex flex-row align-items-center mb-4">
@@ -65,7 +103,7 @@ const Signup = () => {
                               className="form-control"
                               placeholder='Your Email'
                             />
-                            <span style={{color:'red',fontSize:'10'}}>{signupForm.errors.email}</span>
+                            <span style={{ color: 'red', fontSize: '10' }}>{signupForm.errors.email}</span>
                           </div>
                         </div>
                         <div className="d-flex flex-row align-items-center mb-4">
@@ -79,7 +117,7 @@ const Signup = () => {
                               className="form-control"
                               placeholder='Password'
                             />
-                            <span style={{color:'red',fontSize:'10'}}>{signupForm.errors.password}</span>
+                            <span style={{ color: 'red', fontSize: '10' }}>{signupForm.errors.password}</span>
                           </div>
                         </div>
                         <div className="d-flex flex-row align-items-center mb-4">
@@ -93,7 +131,7 @@ const Signup = () => {
                               className="form-control"
                               placeholder='Repeat Your Password'
                             />
-                            <span style={{color:'red',fontSize:'10'}}>{signupForm.errors.cPassword}</span>
+                            <span style={{ color: 'red', fontSize: '10' }}>{signupForm.errors.cPassword}</span>
                           </div>
                         </div>
                         <div className="form-check d-flex justify-content-center mb-5">
